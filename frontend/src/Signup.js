@@ -2,12 +2,15 @@ import { useState } from "react"
 import axios from "axios"
 import { useNavigate, Link } from "react-router-dom"
 
-function App(){
+function Signup(){
   const navigate = useNavigate()
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  
   const [errorMsg, setErrorMsg] = useState("")
+  const [successMsg, setSuccessMsg] = useState("")
 
   const [emailError, setEmailError] = useState(false)
   const [passwordError, setPasswordError] = useState(false)
@@ -22,11 +25,16 @@ function App(){
     if(event.target.value !== "") setPasswordError(false)
   }
 
+  function handleConfirmPasswordChange(event){
+    setConfirmPassword(event.target.value)
+  }
+
   function handleSubmit(event){
     event.preventDefault()
     
     // reset errors
     setErrorMsg("")
+    setSuccessMsg("")
     let valid = true
     
     if(email === ""){
@@ -37,18 +45,26 @@ function App(){
       setPasswordError(true)
       valid = false
     }
+    
+    if(password !== confirmPassword) {
+      setErrorMsg("Passwords do not match.")
+      valid = false
+    }
 
     if(!valid) return
 
-    axios.post("http://localhost:5000/login", {
+    axios.post("http://localhost:5000/signup", {
       email: email,
       password: password
     })
     .then(function(response){
-      if(response.data === true){
-        navigate("/success")
+      if(response.data.success === true){
+        setSuccessMsg("Account created successfully! Redirecting to login...")
+        setTimeout(() => {
+          navigate("/")
+        }, 2000)
       } else {
-        setErrorMsg("Sorry, we can't find an account with this email address. Please try again or create a new account.")
+        setErrorMsg(response.data.message || "Failed to create account. Please try again.")
       }
     })
     .catch((error) => {
@@ -64,20 +80,26 @@ function App(){
       {/* Header with Logo */}
       <header className="absolute top-0 left-0 w-full p-4 sm:p-6 sm:px-12 z-20">
         <Link to="/">
-          <h1 className="text-red-600 font-bold text-3xl sm:text-5xl tracking-tight" style={{ fontFamily: 'Arial, sans-serif' }}>
+            <h1 className="text-red-600 font-bold text-3xl sm:text-5xl tracking-tight" style={{ fontFamily: 'Arial, sans-serif' }}>
             NETFLIX
-          </h1>
+            </h1>
         </Link>
       </header>
 
       {/* Main Login Form Container */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen pt-20 pb-10 sm:pt-0">
         <div className="w-full max-w-[450px] bg-black sm:bg-black/75 rounded-md p-10 sm:p-16">
-          <h2 className="text-white text-3xl font-bold mb-7">Sign In</h2>
+          <h2 className="text-white text-3xl font-bold mb-7">Sign Up</h2>
           
           {errorMsg && (
             <div className="bg-[#e87c03] text-white p-4 mb-4 rounded text-sm">
               {errorMsg}
+            </div>
+          )}
+
+          {successMsg && (
+            <div className="bg-green-600 text-white p-4 mb-4 rounded text-sm">
+              {successMsg}
             </div>
           )}
 
@@ -99,7 +121,7 @@ function App(){
             </div>
 
             {/* Password Input */}
-            <div className="relative mb-2">
+            <div className="relative">
               <input
                 type="password"
                 value={password}
@@ -113,32 +135,32 @@ function App(){
               )}
             </div>
 
+            {/* Confirm Password Input */}
+            <div className="relative mb-2">
+              <input
+                type="password"
+                value={confirmPassword}
+                name="confirmPassword"
+                onChange={handleConfirmPasswordChange}
+                placeholder="Confirm Password"
+                className={`w-full p-4 rounded bg-[#333] text-white outline-none placeholder-gray-400 focus:bg-[#454545] transition`}
+              />
+            </div>
+
             {/* Submit Button */}
             <button
               type="submit"
               className="w-full bg-[#e50914] text-white font-bold p-3.5 mt-2 rounded hover:bg-[#c11119] transition"
             >
-              Sign In
+              Sign Up
             </button>
-
-            {/* Extra Options */}
-            <div className="flex justify-between items-center text-[#b3b3b3] text-xs mt-2">
-              <div className="flex items-center gap-1">
-                <input type="checkbox" id="rememberMe" className="w-4 h-4 bg-[#333] border-none rounded checked:bg-gray-500 accent-gray-500 text-black cursor-pointer" />
-                <label htmlFor="rememberMe" className="cursor-pointer">Remember me</label>
-              </div>
-              <a href="#" className="hover:underline">Need help?</a>
-            </div>
             
           </form>
 
           {/* Footer Text */}
-          <div className="mt-16 sm:mt-24 text-[#737373]">
+          <div className="mt-16 sm:mt-12 text-[#737373]">
             <p className="text-base mb-3">
-              New to Netflix? <Link to="/signup" className="text-white hover:underline">Sign up now</Link>.
-            </p>
-            <p className="text-xs">
-              This page is protected by Google reCAPTCHA to ensure you're not a bot. <a href="#" className="text-[#0071eb] hover:underline">Learn more.</a>
+              Already have an account? <Link to="/" className="text-white hover:underline">Sign in now</Link>.
             </p>
           </div>
 
@@ -148,4 +170,4 @@ function App(){
   )
 }
 
-export default App
+export default Signup
