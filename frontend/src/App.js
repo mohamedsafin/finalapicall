@@ -128,7 +128,7 @@ function App(){
                 <input type="checkbox" id="rememberMe" className="w-4 h-4 bg-[#333] border-none rounded checked:bg-gray-500 accent-gray-500 text-black cursor-pointer" />
                 <label htmlFor="rememberMe" className="cursor-pointer">Remember me</label>
               </div>
-              <a href="#" className="hover:underline">Need help?</a>
+              <span className="hover:underline cursor-pointer">Need help?</span>
             </div>
             
           </form>
@@ -139,7 +139,7 @@ function App(){
               New to Netflix? <Link to="/signup" className="text-white hover:underline">Sign up now</Link>.
             </p>
             <p className="text-xs">
-              This page is protected by Google reCAPTCHA to ensure you're not a bot. <a href="#" className="text-[#0071eb] hover:underline">Learn more.</a>
+              This page is protected by Google reCAPTCHA to ensure you're not a bot. <span className="text-[#0071eb] hover:underline cursor-pointer">Learn more.</span>
             </p>
           </div>
 
