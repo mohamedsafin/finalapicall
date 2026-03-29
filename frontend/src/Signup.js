@@ -53,7 +53,8 @@ function Signup(){
 
     if(!valid) return
 
-    axios.post("http://localhost:5000/signup", {
+    const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000"
+    axios.post(`${apiUrl}/signup`, {
       email: email,
       password: password
     })

@@ -44,3 +44,5 @@ app.post("/signup", function(req, res){
 app.listen(5000, function(){
     console.log("server running in port 5000")
 })
+
+module.exports = app;
