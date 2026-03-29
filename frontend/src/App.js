@@ -40,7 +40,8 @@ function App(){
 
     if(!valid) return
 
-    const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000"
+    const rawUrl = process.env.REACT_APP_API_URL || "http://localhost:5000"
+    const apiUrl = rawUrl.endsWith('/') ? rawUrl.slice(0, -1) : rawUrl
     axios.post(`${apiUrl}/login`, {
       email: email,
       password: password
